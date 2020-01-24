@@ -13,9 +13,9 @@
             [atomist.promise :as promise])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(defn middleware [handler]
-  (fn [request]
-    (handler request)))
+(defn compute-fingerprints [project]
+  (log/info "compute fingerprints in " (.keys js/Object project))
+  [])
 
 (defn process-request
   "process the request pipeline for any events arriving in this skill"
@@ -25,8 +25,11 @@
     ((-> (fn [ch-request]
            (log/info "----> finished")
            (go (>! (:done-channel ch-request) :done)))
-         (middleware)) (assoc request
-             :done-channel done-channel))
+         (api/send-fingerprints)
+         (api/run-sdm-project-callback (fn [project] (compute-fingerprints project)))
+         (api/extract-github-token)
+         (api/create-ref-from-push-event)) (assoc request
+                                             :done-channel done-channel))
     done-channel))
 
 (defn ^:export handler
