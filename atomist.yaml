@@ -1,0 +1,46 @@
+#
+#  Copyright © 2019 Atomist, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+skill:
+  name: "@atomist/update-maven-dependencies"
+  title: Update Maven Dependencies
+  version: "0.1.0"
+  author: Atomist
+  description: Automatically update dependencies based on your own policy
+  long_description: |
+    The user specifies a glob file pattern (e.g. *.rb ) to apply a string replacement to,
+    and a string replacement regular expression (e.g. s/<match>/replace/).
+    When a push happens on a repo, the string replacement skill will be triggered.
+  category:
+  - productivity
+  license: Apache-2.0
+  homepage: https://github.com/atomist-skills/update-maven-dependencies
+  repository: https://github.com/atomist-skills/update-maven-dependencies
+  icon: http://maven.apache.org/images/logos/maven-feather.png
+
+  package:
+    use: '@atomist/update-maven-dependencies'
+
+  runtime:
+    name: nodejs10
+    entry_point: eventhandler
+    memory: 256
+    timeout: 60
+
+commands:
+- name: UpdateMavenDependencies
+  description: "summary of the maven dependencies"
+  pattern: "^update-maven-dependencies.*$"
