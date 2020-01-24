@@ -32,7 +32,7 @@ skill:
   icon: http://maven.apache.org/images/logos/maven-feather.png
 
   package:
-    use: '@atomist/update-maven-dependencies'
+    use: '@atomist/package-cljs-skill'
 
   runtime:
     name: nodejs10
