@@ -12,6 +12,7 @@
     "request": "^2.88.0",
     "@atomist/sdm-core": "^1.7.0",
     "@atomist/automation-client": "^1.7.0",
+    "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
     "@google-cloud/pubsub": "^1.0.0",
     "iconv-lite": "^0.4.19",
     "@google-cloud/storage": "^4.1.3"
