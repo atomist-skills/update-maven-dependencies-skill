@@ -52,7 +52,8 @@
   [dep version]
   (let [version-match #"<version>.*</version>"
         new-version (gstring/format "<version>%s</version>" version)]
-    (cond
+    (log/infof "mock update %s to %s" (.-$value dep) version)
+    #_(cond
       ;; removed if managed
       (and (= version "managed") (s/includes? (.-$value dep) "<version>"))
       (set! (.-$value dep) (s/replace (.-$value dep) version-match ""))
@@ -66,8 +67,7 @@
       (set! (.-$value dep) (s/replace
                             (.-$value dep)
                             #"</artifactId>"
-                            (gstring/format "</artifactId>\n%s%s" (indentation-of (.-$value dep) "<artifactId>") new-version))))
-    (log/info "now" (.-$value dep))))
+                            (gstring/format "</artifactId>\n%s%s" (indentation-of (.-$value dep) "<artifactId>") new-version))))))
 
 (defn apply-maven-dependency
   "matches dependency xml nodes for a particular group/artifact
@@ -97,6 +97,6 @@
                (if (and
                     (s/includes? (. group-id -$value) (str ">" group "<"))
                     (s/includes? (. artifact-id -$value) (str ">" artifact "<")))
-                 (update-version-element! dep version))))))))
+                 (update-version-element! dep "version"))))))))
    project))
 
