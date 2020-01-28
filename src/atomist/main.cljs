@@ -22,7 +22,9 @@
           path field was added to the Fingerprint to manage this.
           This version supports only a pom.xml in the root of the Repo.
 
-   Transform Maven dependencies into Fingerprints"
+   Transform Maven dependencies into Fingerprints
+
+   Our data structure has {:keys [group artifact version name version scope]}"
   [project]
   (go
    (let [deps (<! (maven/find-declared-dependencies project))]
@@ -42,19 +44,54 @@
              :displayType "Maven declared dependencies"})
           (into [])))))
 
+(defn check-for-targets-to-apply [handler]
+  (fn [request]
+    (if (not (empty? (-> request :data :CommitFingerprintImpact :offTarget)))
+      (handler request)
+      (go (>! (:done-channel request) :done)))))
+
+(defn- handle-push-event [request done-channel]
+  ((-> (fn [ch-request]
+         (log/info "----> finished handling Push")
+         (go (>! (:done-channel ch-request) :done)))
+       (api/send-fingerprints)
+       (api/run-sdm-project-callback compute-maven-fingerprints)
+       (api/extract-github-token)
+       (api/create-ref-from-push-event))
+   (assoc request
+     :done-channel done-channel)))
+
+(defn- handle-impact-event [request done-channel]
+  ((-> (fn [ch-request]
+         (log/info "----> finished handling CommitFingerprintImpact")
+         (go (>! (:done-channel ch-request) :done)))
+       (api/run-sdm-project-callback
+        (sdm/commit-then-PR
+         (fn [p] (maven/apply-maven-dependency p (-> request :data :CommitFingerprintImpact :offTarget)))
+         {:branch (str (random-uuid))
+          :target-branch "master"
+          :body "apply maven target dependencies"
+          :title "apply maven target dependencies"}))
+       (api/extract-github-token)
+       (api/create-ref-from-repo
+        (-> request :data :CommitFingerprintImpact :repo)
+        (-> request :data :CommitFingerprintImpact :branch))
+       (check-for-targets-to-apply))
+   (assoc request
+     :done-channel done-channel)))
+
 (defn process-request
   "process the request pipeline for any events arriving in this skill"
   [request]
   (let [done-channel (chan)]
     ;; create a pipeline of handlers but always end by writing to the done channel and logging something
-    ((-> (fn [ch-request]
-           (log/info "----> finished")
-           (go (>! (:done-channel ch-request) :done)))
-         (api/send-fingerprints)
-         (api/run-sdm-project-callback (fn [project] (go (<! (compute-maven-fingerprints project)))))
-         (api/extract-github-token)
-         (api/create-ref-from-push-event)) (assoc request
-                                             :done-channel done-channel))
+    (cond
+      ;; handle Push events
+      (= :Push (:data request))
+      (handle-push-event request done-channel)
+      ;; handle Commit Fingeprint Impact events
+      (= :CommitFingerprintImpact (:data request))
+      (handle-impact-event request done-channel))
     done-channel))
 
 (defn ^:export handler
