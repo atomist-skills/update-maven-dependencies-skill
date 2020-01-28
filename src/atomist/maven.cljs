@@ -52,7 +52,7 @@
   [dep version]
   (let [version-match #"<version>.*</version>"
         new-version (gstring/format "<version>%s</version>" version)]
-    (log/infof "mock update %s to %s" (.-$value dep) version)
+    (log/infof "MOCK update %s to %s" (.-$value dep) version)
     #_(cond
       ;; removed if managed
       (and (= version "managed") (s/includes? (.-$value dep) "<version>"))
