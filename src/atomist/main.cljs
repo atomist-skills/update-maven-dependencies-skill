@@ -50,18 +50,16 @@
       (handler request)
       (go (>! (:done-channel request) :done)))))
 
-(defn- handle-push-event [request done-channel]
+(defn- handle-push-event [request]
   ((-> (fn [ch-request]
          (log/info "----> finished handling Push")
          (go (>! (:done-channel ch-request) :done)))
        (api/send-fingerprints)
        (api/run-sdm-project-callback compute-maven-fingerprints)
        (api/extract-github-token)
-       (api/create-ref-from-push-event))
-   (assoc request
-     :done-channel done-channel)))
+       (api/create-ref-from-push-event)) request))
 
-(defn- handle-impact-event [request done-channel]
+(defn- handle-impact-event [request]
   ((-> (fn [ch-request]
          (log/info "----> finished handling CommitFingerprintImpact")
          (go (>! (:done-channel ch-request) :done)))
@@ -76,23 +74,7 @@
        (api/create-ref-from-repo
         (-> request :data :CommitFingerprintImpact :repo)
         (-> request :data :CommitFingerprintImpact :branch))
-       (check-for-targets-to-apply))
-   (assoc request
-     :done-channel done-channel)))
-
-(defn process-request
-  "process the request pipeline for any events arriving in this skill"
-  [request]
-  (let [done-channel (chan)]
-    ;; create a pipeline of handlers but always end by writing to the done channel and logging something
-    (cond
-      ;; handle Push events
-      (= :Push (:data request))
-      (handle-push-event request done-channel)
-      ;; handle Commit Fingeprint Impact events
-      (= :CommitFingerprintImpact (:data request))
-      (handle-impact-event request done-channel))
-    done-channel))
+       (check-for-targets-to-apply)) request))
 
 (defn ^:export handler
   "handler
@@ -101,6 +83,14 @@
       data - Incoming Request #js object
       sendreponse - callback ([obj]) puts an outgoing message on the response topic"
   [data sendreponse]
-  (promise/chan->promise
-   (process-request (assoc (js->clj data :keywordize-keys true)
-                      :sendreponse sendreponse))))
+  (api/make-request
+   data
+   sendreponse
+   (fn [request]
+     (cond
+       ;; handle Push events
+       (= :Push (:data request))
+       (handle-push-event request)
+       ;; handle Commit Fingeprint Impact events
+       (= :CommitFingerprintImpact (:data request))
+       (handle-impact-event request)))))
