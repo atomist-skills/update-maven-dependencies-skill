@@ -51,18 +51,14 @@
       (go (>! (:done-channel request) :done)))))
 
 (defn- handle-push-event [request]
-  ((-> (fn [ch-request]
-         (log/info "----> finished handling Push")
-         (go (>! (:done-channel ch-request) :done)))
+  ((-> (api/finished :message "handling Push")
        (api/send-fingerprints)
        (api/run-sdm-project-callback compute-maven-fingerprints)
        (api/extract-github-token)
        (api/create-ref-from-push-event)) request))
 
 (defn- handle-impact-event [request]
-  ((-> (fn [ch-request]
-         (log/info "----> finished handling CommitFingerprintImpact")
-         (go (>! (:done-channel ch-request) :done)))
+  ((-> (api/finished :message "handling CommitFingerprintImpact")
        (api/run-sdm-project-callback
         (sdm/commit-then-PR
          (fn [p] (maven/apply-maven-dependency p (-> request :data :CommitFingerprintImpact :offTarget)))
