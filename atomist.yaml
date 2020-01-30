@@ -15,9 +15,9 @@
 #
 
 skill:
-  name: "@atomist/update-maven-dependencies"
+  name: "atomist/update-maven-dependencies"
   title: Update Maven Dependencies
-  version: "0.1.1"
+  version: "0.2.0"
   author: Atomist
   description: Automatically update dependencies based on your own policy
   long_description: |
@@ -32,7 +32,7 @@ skill:
   icon: https://d1q6f0aelx0por.cloudfront.net/product-logos/b14d466e-356f-4b00-bc4e-af5e8284a1bd-maven.png
 
   package:
-    use: '@atomist/package-cljs-skill'
+    use: 'atomist/package-cljs-skill'
 
   runtime:
     name: nodejs10
