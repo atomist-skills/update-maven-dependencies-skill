@@ -37,7 +37,7 @@
  (sdm/do-with-shallow-cloned-project
   (fn [project]
     (go
-     (cljs.pprint/pprint (<! (atomist.main/compute-maven-fingerprints project)))
+     (cljs.pprint/pprint (<! (atomist.main/compute-fingerprints project)))
      :true))
   github-token
   {:repo "spring-types"

@@ -9,7 +9,8 @@
             ["@atomist/sdm-pack-spring/lib/maven/parse/fromPom" :as fromPom]
             ["@atomist/automation-client" :as automation-client]
             ["@atomist/sdm-pack-spring/lib/xml/XmldocFileParser" :as xml]
-            [atomist.json :as json])
+            [atomist.json :as json]
+            [cljs-node-io.core :as io])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def ast-utils (. automation-client -astUtils))
@@ -52,8 +53,7 @@
   [dep version]
   (let [version-match #"<version>.*</version>"
         new-version (gstring/format "<version>%s</version>" version)]
-    (log/infof "MOCK update %s to %s" (.-$value dep) version)
-    #_(cond
+    (cond
       ;; removed if managed
       (and (= version "managed") (s/includes? (.-$value dep) "<version>"))
       (set! (.-$value dep) (s/replace (.-$value dep) version-match ""))
@@ -88,7 +88,7 @@
          (fn [dep]
            (log/infof "check %s" (.-$value dep))
            (doseq [{:keys [data]} off-targets
-                   :let [{:keys [group artifact]} (json/->obj data)]]
+                   :let [{:keys [group artifact version]} (json/->obj data)]]
              (log/infof "check %s/%s" group artifact)
              (let [group-id (.find (. dep -$children)
                                    (fn [c] (s/starts-with? (. c -$value) "<groupId>")))
@@ -97,6 +97,18 @@
                (if (and
                     (s/includes? (. group-id -$value) (str ">" group "<"))
                     (s/includes? (. artifact-id -$value) (str ">" artifact "<")))
-                 (update-version-element! dep "version"))))))))
+                 (update-version-element! dep version))))))))
    project))
 
+(defn apply-library-editor
+  [project pr-opts library-name library-version]
+  (let [[_ group artifact] (re-find #"(.*):(.*)" library-name)]
+    ((sdm/commit-then-PR
+      (fn [p] (go
+               (try
+                 (<! (apply-maven-dependency project [{:data (json/->str {:group group :artifact artifact :version library-version})}]))
+                 :success
+                 (catch :default ex
+                   (log/error "failure updating project.clj for dependency change" ex)
+                   :failure))))
+      pr-opts) project)))
