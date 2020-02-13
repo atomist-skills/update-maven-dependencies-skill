@@ -57,7 +57,7 @@ parameters:
       displayName: "Maven artifact version"
       name: "version"
       required: true
-  - repoFilters:
+  - repoFilter:
       description: "The set of Repositories for this rule."
       displayName: "Repository Scope"
       name: "scope"
