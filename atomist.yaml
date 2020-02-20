@@ -25,7 +25,8 @@ skill:
     and a string replacement regular expression (e.g. s/<match>/replace/).
     When a push happens on a repo, the string replacement skill will be triggered.
   category:
-  - productivity
+  - DEPENDENCIES
+  - DEV_EX
   license: Apache-2.0
   homepage: https://github.com/atomist-skills/update-maven-dependencies
   repository: https://github.com/atomist-skills/update-maven-dependencies
