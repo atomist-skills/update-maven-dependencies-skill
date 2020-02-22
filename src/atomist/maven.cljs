@@ -1,6 +1,7 @@
 (ns atomist.maven
   (:require [atomist.cljs-log :as log]
             [atomist.promise :as promise]
+            [atomist.api :as api]
             [cljs.core.async :refer [<! >! timeout chan]]
             [atomist.sdmprojectmodel :as sdm]
             [clojure.string :as s]
@@ -15,6 +16,19 @@
 
 (def ast-utils (. automation-client -astUtils))
 (def xml-doc-file-parser (. xml -XmldocFileParser))
+
+(defn validate-maven-coordinate [handler]
+  (fn [request]
+    (if-let [dependency (:dependency request)]
+      (let [[_ group artifact version] (re-find #"(.*):(.*):(.*)" dependency)]
+        (if (and group artifact version)
+          (handler request)
+          (api/finish request :failure (gstring/format "%s is not a valid maven coordinate" dependency))))
+      (api/finish request :failure "this request requires a dependency to be configured"))))
+
+(defn validate-policy [handler]
+  (fn [request]
+    (handler request)))
 
 (defn find-declared-dependencies
   "Use sdm-pack-spring to extract dependency gavs from a pom.xml in the root of this project.

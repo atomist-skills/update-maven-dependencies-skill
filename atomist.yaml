@@ -43,23 +43,38 @@ skill:
     timeout: 60
 
 commands:
-- name: UpdateMavenDependencies
-  description: "summary of the maven dependencies"
-  pattern: "^update-maven-dependencies.*$"
+  - name: ShowMavenDependencies
+    description: "summary of the npm dependencies"
+    pattern: "^mvn fingerprints.*$"
+  - name: UpdateMavenDependency
+    description: "update one dependency"
+    pattern: "^mvn update.*$"
 
 parameters:
-  - string:
-      description: "Maven group-id:artifact-id"
-      displayName: "Maven group-id:artifact-id"
-      name: "name"
+  - singleChoice:
+      description: "Choose a policy for how target dependencies should be discovered by this skill"
+      displayName: "Target Policy"
+      name: "policy"
       required: true
+      options:
+        - description: "Use the latest semver version found within current set of Projects"
+          text: "latest semver used"
+          value: "latestSemVerUsed"
+        - description: "Use the latest dependency available in maven central"
+          text: "latest semver available"
+          value: "latestSemVerAvailable"
+        - description: "Use the set of maven dependencies configured manually in this Skill"
+          text: "manual"
+          value: "manualConfiguration"
   - string:
-      description: "Maven artifact version"
-      displayName: "Maven artifact version"
-      name: "version"
-      required: true
+      description: "Manually Configured set of Maven dependencies"
+      displayName: "application/json map of dependencies - these are only updated if they already exist in a project"
+      name: "dependencies"
+      lineStyle: "multiple"
+      placeHolder: "[group:artifact:version,...] or [group:artifact,...] for latest policies"
+      required: false
   - repoFilter:
       description: "The set of Repositories for this rule."
       displayName: "Repository Scope"
       name: "scope"
-      required: false
+      required: true
