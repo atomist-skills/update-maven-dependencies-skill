@@ -17,13 +17,12 @@
 skill:
   name: "atomist/update-maven-dependencies"
   title: Update Maven Dependencies
-  version: 0.2.5
+  version: 0.2.7
   author: Atomist
   description: Automatically update dependencies based on your own policy
   long_description: |
-    The user specifies a glob file pattern (e.g. *.rb ) to apply a string replacement to,
-    and a string replacement regular expression (e.g. s/<match>/replace/).
-    When a push happens on a repo, the string replacement skill will be triggered.
+    Track all versions of maven pom.xml dependencies and allow users to set
+    cross repo targets for dependency versions.
   category:
   - DEPENDENCIES
   - DEV_EX
@@ -49,6 +48,9 @@ commands:
   - name: UpdateMavenDependency
     description: "update one dependency"
     pattern: "^mvn update.*$"
+  - name: SyncMavenDependency
+    description: "sync dependencies for one Repository"
+    pattern: "^mvn sync.*$"
 
 parameters:
   - singleChoice:
@@ -57,18 +59,23 @@ parameters:
       name: "policy"
       required: true
       options:
-        - description: "Use the latest semver version found within current set of Projects"
+        - description: "Use the latest semver version"
           text: "latest semver used"
           value: "latestSemVerUsed"
         - description: "Use the set of maven dependencies configured manually in this Skill"
           text: "manual"
           value: "manualConfiguration"
-  - string:
-      description: "Manually Configured set of Maven dependencies"
-      displayName: "application/json map of dependencies - these are only updated if they already exist in a project"
-      name: "dependencies"
-      lineStyle: "multiple"
-      placeHolder: "[group:artifact:version,...] or [group:artifact,...] for latest policies"
+  - stringArray:
+      description: |
+        Required for `manualConfiguration` policy.  Coordinates should be in the form `groupId:artifactId:packaging:version`
+      displayName: "Maven Coordinates"
+      name: "coordinates"
+      required: false
+  - stringArray:
+      description: |
+        Required for `latestSemVerUsed` policy
+      displayName: "Policy Configuration"
+      name: "artifacts"
       required: false
   - repoFilter:
       description: "The set of Repositories for this rule."

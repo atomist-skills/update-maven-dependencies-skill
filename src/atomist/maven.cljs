@@ -11,7 +11,8 @@
             ["@atomist/automation-client" :as automation-client]
             ["@atomist/sdm-pack-spring/lib/xml/XmldocFileParser" :as xml]
             [atomist.json :as json]
-            [cljs-node-io.core :as io])
+            [cljs-node-io.core :as io]
+            [atomist.deps :as deps])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def ast-utils (. automation-client -astUtils))
@@ -126,3 +127,45 @@
                    (log/error "failure updating project.clj for dependency change" ex)
                    :failure))))
       pr-opts) project)))
+
+(defn validate-dependency
+  "dependency from a user should be a proper application/json map with string values"
+  [handler]
+  (fn [request]
+    (if-let [dependency (:dependency request)]
+      (try
+        (let [d (json/->obj dependency :keywordize-keys false)]
+          (if (and (->> (keys d) (every? string?))
+                   (->> (vals d) (every? string?)))
+            (handler request)
+            (api/finish request :failure (gstring/format "%s is not a valid maven coordinate" dependency))))
+        (catch :default ex
+          (api/finish request :failure (gstring/format "%s is not a valid npm dependency formatted JSON doc" dependency))))
+      (api/finish request :failure "this request requires a dependency to be configured"))))
+
+(defn update-dependency [& args])
+
+(defn validate-maven-policy
+  "validate npm dependency configuration
+    all configurations with a policy=manualConfiguration should have a dependency which is an application/json map
+    all configurations with other policies use a dependency which is an array of strings"
+  [handler]
+  (fn [request]
+
+    (try
+      (let [configurations (->> (:configurations request)
+                                (map #(if (= "manualConfiguration" (deps/policy-type %))
+                                        (update-dependency %)
+                                        %))
+                                (map deps/validate-policy))]
+        (if (->> configurations
+                 (filter :error)
+                 (empty?))
+          (handler (assoc request :configurations configurations))
+          (api/finish request :failure (->> configurations
+                                            (map :error)
+                                            (interpose ",")
+                                            (apply str)))))
+      (catch :default ex
+        (log/error ex)
+        (api/finish request :failure (-> (ex-data ex) :message))))))
