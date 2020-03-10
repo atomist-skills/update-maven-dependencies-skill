@@ -38,7 +38,7 @@ skill:
   runtime:
     name: nodejs10
     entry_point: eventhandler
-    memory: 256
+    memory: 512
     timeout: 60
 
 commands:
