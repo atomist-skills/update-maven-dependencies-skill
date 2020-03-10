@@ -9,15 +9,22 @@
             [atomist.sha :as sha]
             [atomist.maven :as maven]
             [atomist.deps :as deps]
+            [atomist.config :as config]
             [goog.string :as gstring]
             [goog.string.format])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
+;; name groupId:artifactId
+;; type maven-direct-dep
+;; data {:keys [group artifact name version scope]}
+;; sha of "groupId:artifactId:version"
+
 (defn- deps->fingerprints [deps]
   (->> (for [gav deps
-             :let [data (assoc gav :version (if (:version gav)
-                                              (:version gav)
-                                              "managed"))]]
+             :let [data [(gstring/format "%s:%s" (:group gav) (:artifact gav))
+                         (if (:version gav)
+                           (:version gav)
+                           "managed")]]]
          {:type "maven-direct-dep"
           :name (gstring/format "%s:%s" (:group gav) (:artifact gav))
           :abbreviation "mvn"
@@ -62,6 +69,7 @@
    (try
      (let [deps (<! (maven/find-declared-dependencies project))
            fingerprints (deps->fingerprints deps)]
+       (log/infof "found %d fingerprints" (count fingerprints))
        (<! (deps/apply-policy-targets
             (assoc request :project project :fingerprints fingerprints)
             "maven-direct-dep"
@@ -73,15 +81,18 @@
        {:error ex
         :message "unable to compute maven fingerprints"}))))
 
-(defn set-up-target-configuration [handler]
+(defn set-up-target-configuration
+  "middleware used to create a policy configuration when running a command handler with a --dependency
+   puts it straight into the final form used by apply-policy-targets"
+  [handler]
   (fn [request]
     (log/infof "set up target dependency to converge on %s" (:dependency request))
-    (let [[g a v] (re-find #"(.*):(.*):(.*)" (:dependency request))])
-    (handler (assoc request
-               :configurations [{:parameters [{:name "policy"
-                                               :value "manualConfiguration"}
-                                              {:name "dependencies"
-                                               :value (gstring/format "[[]]")}]}]))))
+    (let [[g a v] (re-find #"(.*):(.*):(.*)" (:dependency request))]
+      (handler (assoc request
+                 :configurations [{:parameters [{:name "policy"
+                                                 :value "manualConfiguration"}
+                                                {:name "dependencies"
+                                                 :value (gstring/format "[[\"%s:%s\" \"%s\"]]" g a v)}]}])))))
 
 (defn ^:export handler
   "handler
@@ -96,10 +107,10 @@
                      ["UpdateMavenDependency" compute-fingerprints
                       (api/compose-middleware
                        [set-up-target-configuration]
-                       [maven/validate-dependency]
+                       [config/validate-dependency]
                        [api/check-required-parameters {:name "dependency"
                                                        :required true
                                                        :pattern ".*"
                                                        :validInput "groupId:artifactId:version"}]
                        [api/extract-cli-parameters [[nil "--dependency dependency" "group:artifact:version"]]])]
-                     maven/validate-maven-policy))
+                     config/validate-maven-policy))

@@ -18,19 +18,6 @@
 (def ast-utils (. automation-client -astUtils))
 (def xml-doc-file-parser (. xml -XmldocFileParser))
 
-(defn validate-maven-coordinate [handler]
-  (fn [request]
-    (if-let [dependency (:dependency request)]
-      (let [[_ group artifact version] (re-find #"(.*):(.*):(.*)" dependency)]
-        (if (and group artifact version)
-          (handler request)
-          (api/finish request :failure (gstring/format "%s is not a valid maven coordinate" dependency))))
-      (api/finish request :failure "this request requires a dependency to be configured"))))
-
-(defn validate-policy [handler]
-  (fn [request]
-    (handler request)))
-
 (defn find-declared-dependencies
   "Use sdm-pack-spring to extract dependency gavs from a pom.xml in the root of this project.
    findDeclaredDependencies takes a second argument with the glob pattern for pom.xml but the
@@ -116,56 +103,12 @@
    project))
 
 (defn apply-library-editor
-  [project pr-opts library-name library-version]
-  (let [[_ group artifact] (re-find #"(.*):(.*)" library-name)]
-    ((sdm/commit-then-PR
-      (fn [p] (go
-               (try
-                 (<! (apply-maven-dependency project [{:data (json/->str {:group group :artifact artifact :version library-version})}]))
-                 :success
-                 (catch :default ex
-                   (log/error "failure updating project.clj for dependency change" ex)
-                   :failure))))
-      pr-opts) project)))
-
-(defn validate-dependency
-  "dependency from a user should be a proper application/json map with string values"
-  [handler]
-  (fn [request]
-    (if-let [dependency (:dependency request)]
-      (try
-        (let [d (json/->obj dependency :keywordize-keys false)]
-          (if (and (->> (keys d) (every? string?))
-                   (->> (vals d) (every? string?)))
-            (handler request)
-            (api/finish request :failure (gstring/format "%s is not a valid maven coordinate" dependency))))
-        (catch :default ex
-          (api/finish request :failure (gstring/format "%s is not a valid npm dependency formatted JSON doc" dependency))))
-      (api/finish request :failure "this request requires a dependency to be configured"))))
-
-(defn update-dependency [& args])
-
-(defn validate-maven-policy
-  "validate npm dependency configuration
-    all configurations with a policy=manualConfiguration should have a dependency which is an application/json map
-    all configurations with other policies use a dependency which is an array of strings"
-  [handler]
-  (fn [request]
-
-    (try
-      (let [configurations (->> (:configurations request)
-                                (map #(if (= "manualConfiguration" (deps/policy-type %))
-                                        (update-dependency %)
-                                        %))
-                                (map deps/validate-policy))]
-        (if (->> configurations
-                 (filter :error)
-                 (empty?))
-          (handler (assoc request :configurations configurations))
-          (api/finish request :failure (->> configurations
-                                            (map :error)
-                                            (interpose ",")
-                                            (apply str)))))
-      (catch :default ex
-        (log/error ex)
-        (api/finish request :failure (-> (ex-data ex) :message))))))
+  [project library-name library-version]
+  (go
+   (try
+     (let [[_ group artifact] (re-find #"(.*):(.*)" library-name)]
+       (<! (apply-maven-dependency project [{:data (json/->str {:group group :artifact artifact :version library-version})}])))
+     :success
+     (catch :default ex
+       (log/error "failure updating pom.xml" ex)
+       :failure))))
