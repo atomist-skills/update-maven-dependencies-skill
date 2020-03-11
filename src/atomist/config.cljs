@@ -31,7 +31,7 @@
                                       (->> parameters
                                            (map #(if (= "dependencies" (:name %))
                                                    (update % :value (fn [v] (->> (json/->obj v)
-                                                                                 (gav->dep)
+                                                                                 (map gav->dep)
                                                                                  (into [])
                                                                                  (pr-str))))
                                                    %))))))
