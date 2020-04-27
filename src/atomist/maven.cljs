@@ -12,8 +12,41 @@
             ["@atomist/sdm-pack-spring/lib/xml/XmldocFileParser" :as xml]
             [atomist.json :as json]
             [cljs-node-io.core :as io]
-            [atomist.deps :as deps])
+            [atomist.deps :as deps]
+            [atomist.sha :as sha])
   (:require-macros [cljs.core.async.macros :refer [go]]))
+
+(defn library-name->name [s]
+  (-> s
+      (s/replace-all #"@" "")
+      (s/replace-all #"/" "::")))
+
+(defn data->sha [data]
+  (sha/sha-256 (json/->str data)))
+
+(defn data->library-version [data]
+  [(if (= (:group data) (:artifact data))
+     (:artifact data)
+     (gstring/format "%s:%s" (:group data) (:artifact data)))
+   (:version data)])
+
+(defn library-version->data [[library version]]
+  (assoc
+   (if-let [[_ group artifact] (re-find #"(.*):(.*)" library)]
+     {:group group
+      :artifact artifact}
+     {:group library
+      :artifact library})
+   :version version))
+
+(defn ->coordinate [[n v]]
+  (merge
+   {:version v}
+   (if-let [[_ g a] (re-find #"(.*):(.*)" n)]
+     {:group g
+      :artifact a}
+     {:group n
+      :artifact n})))
 
 (def ast-utils (. automation-client -astUtils))
 (def xml-doc-file-parser (. xml -XmldocFileParser))

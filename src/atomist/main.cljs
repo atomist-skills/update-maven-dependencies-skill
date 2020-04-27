@@ -14,11 +14,6 @@
             [goog.string.format])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-;; name groupId:artifactId
-;; type maven-direct-dep
-;; data {:keys [group artifact name version scope]}
-;; sha of "groupId:artifactId:version"
-
 (defn- deps->fingerprints [deps]
   (->> (for [gav deps
              :let [data [(gstring/format "%s:%s" (:group gav) (:artifact gav))
@@ -26,15 +21,15 @@
                            (:version gav)
                            "managed")]]]
          {:type "maven-direct-dep"
-          :name (gstring/format "%s:%s" (:group gav) (:artifact gav))
-          :abbreviation "mvn"
+          :name (maven/library-name->name (first data))
+          :abbreviation "m2"
           :version "0.1.0"
-          :data data
+          :data (maven/->coordinate data)
           :path "./pom.xml"
-          :sha (sha/sha-256 (json/->str data))
-          :displayName (gstring/format "%s:%s" (:group gav) (:artifact gav))
+          :sha (maven/data->sha (maven/->coordinate data))
+          :displayName (first data)
           :displayValue (:version gav)
-          :displayType "Maven declared dependencies"})
+          :displayType "MVN Coordinate"})
        (into [])))
 
 (defn just-fingerprints
@@ -56,6 +51,13 @@
         {:error ex
          :message "unable to compute maven fingerprints"}))))
 
+(def apply-policy (partial deps/apply-policy-targets {:type "maven-direct-dep"
+                                                      :apply-library-editor maven/apply-library-editor
+                                                      :->library-version maven/data->library-version
+                                                      :->data maven/library-version->data
+                                                      :->sha maven/data->sha
+                                                      :->name maven/library-name->name}))
+
 (defn compute-fingerprints
   "TODO - we used to support multiple pom.xml files in the Project.  The
           path field was added to the Fingerprint to manage this.
@@ -70,29 +72,14 @@
       (let [deps (<! (maven/find-declared-dependencies project))
             fingerprints (deps->fingerprints deps)]
         (log/infof "found %d fingerprints" (count fingerprints))
-        (<! (deps/apply-policy-targets
-             (assoc request :project project :fingerprints fingerprints)
-             "maven-direct-dep"
-             maven/apply-library-editor))
+        (<! (apply-policy
+             (assoc request :project project :fingerprints fingerprints)))
         fingerprints)
       (catch :default ex
         (log/error "unable to compute maven fingerprints")
         (log/error ex)
         {:error ex
          :message "unable to compute maven fingerprints"}))))
-
-(defn set-up-target-configuration
-  "middleware used to create a policy configuration when running a command handler with a --dependency
-   puts it straight into the final form used by apply-policy-targets"
-  [handler]
-  (fn [request]
-    (log/infof "set up target dependency to converge on %s" (:dependency request))
-    (let [[g a v] (re-find #"(.*):(.*):(.*)" (:dependency request))]
-      (handler (assoc request
-                      :configurations [{:parameters [{:name "policy"
-                                                      :value "manualConfiguration"}
-                                                     {:name "dependencies"
-                                                      :value (gstring/format "[[\"%s:%s\" \"%s\"]]" g a v)}]}])))))
 
 (defn ^:export handler
   "handler
@@ -106,7 +93,7 @@
                      ["SyncMavenDependency"]
                      ["UpdateMavenDependency" compute-fingerprints
                       (api/compose-middleware
-                       [set-up-target-configuration]
+                       [config/set-up-target-configuration]
                        [config/validate-dependency]
                        [api/check-required-parameters {:name "dependency"
                                                        :required true
