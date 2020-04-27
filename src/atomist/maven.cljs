@@ -80,35 +80,35 @@
    returns chan that will emit the Project when the edit is complete"
   [project off-targets]
   (go
-   (<! (promise/from-promise
-        (.doWithAllMatches
-         ast-utils
-         project
-         (xml-doc-file-parser.)
-         "pom.xml"
-         "//project/dependencies/dependency[/artifactId][/groupId]"
-         (fn [dep]
-           (log/infof "check %s" (.-$value dep))
-           (doseq [{:keys [data]} off-targets
-                   :let [{:keys [group artifact version]} (json/->obj data)]]
-             (log/infof "check %s/%s" group artifact)
-             (let [group-id (.find (. dep -$children)
-                                   (fn [c] (s/starts-with? (. c -$value) "<groupId>")))
-                   artifact-id (.find (. dep -$children)
-                                      (fn [c] (s/starts-with? (. c -$value) "<artifactId>")))]
-               (if (and
-                    (s/includes? (. group-id -$value) (str ">" group "<"))
-                    (s/includes? (. artifact-id -$value) (str ">" artifact "<")))
-                 (update-version-element! dep version))))))))
-   project))
+    (<! (promise/from-promise
+         (.doWithAllMatches
+          ast-utils
+          project
+          (xml-doc-file-parser.)
+          "pom.xml"
+          "//project/dependencies/dependency[/artifactId][/groupId]"
+          (fn [dep]
+            (log/infof "check %s" (.-$value dep))
+            (doseq [{:keys [data]} off-targets
+                    :let [{:keys [group artifact version]} (json/->obj data)]]
+              (log/infof "check %s/%s" group artifact)
+              (let [group-id (.find (. dep -$children)
+                                    (fn [c] (s/starts-with? (. c -$value) "<groupId>")))
+                    artifact-id (.find (. dep -$children)
+                                       (fn [c] (s/starts-with? (. c -$value) "<artifactId>")))]
+                (if (and
+                     (s/includes? (. group-id -$value) (str ">" group "<"))
+                     (s/includes? (. artifact-id -$value) (str ">" artifact "<")))
+                  (update-version-element! dep version))))))))
+    project))
 
 (defn apply-library-editor
   [project library-name library-version]
   (go
-   (try
-     (let [[_ group artifact] (re-find #"(.*):(.*)" library-name)]
-       (<! (apply-maven-dependency project [{:data (json/->str {:group group :artifact artifact :version library-version})}])))
-     :success
-     (catch :default ex
-       (log/error "failure updating pom.xml" ex)
-       :failure))))
+    (try
+      (let [[_ group artifact] (re-find #"(.*):(.*)" library-name)]
+        (<! (apply-maven-dependency project [{:data (json/->str {:group group :artifact artifact :version library-version})}])))
+      :success
+      (catch :default ex
+        (log/error "failure updating pom.xml" ex)
+        :failure))))

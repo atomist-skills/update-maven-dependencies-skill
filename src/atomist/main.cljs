@@ -47,14 +47,14 @@
    Our data structure has {:keys [group artifact version name version scope]}"
   [request project]
   (go
-   (try
-     (let [deps (<! (maven/find-declared-dependencies project))]
-       (deps->fingerprints deps))
-     (catch :default ex
-       (log/error "unable to compute maven fingerprints")
-       (log/error ex)
-       {:error ex
-        :message "unable to compute maven fingerprints"}))))
+    (try
+      (let [deps (<! (maven/find-declared-dependencies project))]
+        (deps->fingerprints deps))
+      (catch :default ex
+        (log/error "unable to compute maven fingerprints")
+        (log/error ex)
+        {:error ex
+         :message "unable to compute maven fingerprints"}))))
 
 (defn compute-fingerprints
   "TODO - we used to support multiple pom.xml files in the Project.  The
@@ -66,20 +66,20 @@
    Our data structure has {:keys [group artifact version name version scope]}"
   [request project]
   (go
-   (try
-     (let [deps (<! (maven/find-declared-dependencies project))
-           fingerprints (deps->fingerprints deps)]
-       (log/infof "found %d fingerprints" (count fingerprints))
-       (<! (deps/apply-policy-targets
-            (assoc request :project project :fingerprints fingerprints)
-            "maven-direct-dep"
-            maven/apply-library-editor))
-       fingerprints)
-     (catch :default ex
-       (log/error "unable to compute maven fingerprints")
-       (log/error ex)
-       {:error ex
-        :message "unable to compute maven fingerprints"}))))
+    (try
+      (let [deps (<! (maven/find-declared-dependencies project))
+            fingerprints (deps->fingerprints deps)]
+        (log/infof "found %d fingerprints" (count fingerprints))
+        (<! (deps/apply-policy-targets
+             (assoc request :project project :fingerprints fingerprints)
+             "maven-direct-dep"
+             maven/apply-library-editor))
+        fingerprints)
+      (catch :default ex
+        (log/error "unable to compute maven fingerprints")
+        (log/error ex)
+        {:error ex
+         :message "unable to compute maven fingerprints"}))))
 
 (defn set-up-target-configuration
   "middleware used to create a policy configuration when running a command handler with a --dependency
@@ -89,10 +89,10 @@
     (log/infof "set up target dependency to converge on %s" (:dependency request))
     (let [[g a v] (re-find #"(.*):(.*):(.*)" (:dependency request))]
       (handler (assoc request
-                 :configurations [{:parameters [{:name "policy"
-                                                 :value "manualConfiguration"}
-                                                {:name "dependencies"
-                                                 :value (gstring/format "[[\"%s:%s\" \"%s\"]]" g a v)}]}])))))
+                      :configurations [{:parameters [{:name "policy"
+                                                      :value "manualConfiguration"}
+                                                     {:name "dependencies"
+                                                      :value (gstring/format "[[\"%s:%s\" \"%s\"]]" g a v)}]}])))))
 
 (defn ^:export handler
   "handler
