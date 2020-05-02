@@ -72,7 +72,7 @@
         (log/infof "found %d fingerprints" (count fingerprints))
         (<! (apply-policy
              (assoc request
-               :fingerprints fingerprints)))
+                    :fingerprints fingerprints)))
         fingerprints)
       (catch :default ex
         (log/error "unable to compute maven fingerprints")
