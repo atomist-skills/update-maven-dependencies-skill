@@ -2,21 +2,14 @@
 
 <!---atomist-skill-readme:start--->
 
-Keep track of all versions of maven dependencies found within pom.xml files across your Repositories.
-
 # What it's useful for
 
-As you scale up the number of Repositories containing pom.xml files, it is natural to accumulate
-dependencies on many different versions of the same artifact.  This skill tracks those different versions, 
-and offers three different target policies to help you reduce version "entropy".
+Track all the different versions of mvn artifacts in `pom.xml` files across your repositories.  
+Automatically raise pull requests when a version does not conform to a selected target version.  Choose
+from three different targets:
 
-1.  **Latest Used** - of all your versions in use, teams should be moving towards the latest of these.  This is a 
-    useful policy for internal artifacts.
-2.  **Latest Available** - projects should be use the latest version available at maven central.  This is great for keeping
-    up with bug fixes in open-source libraries.
-3.  **Manual** - use a target version specified directly in this skill's configuration.  This can be useful to guide
-    your library's users on the current "best" version of a library.  However, the effect is very similar
-    to a manually updated **Latest Used** target.
+*  **Latest Used** - select the latest version found in one of your repositories
+*  **Manual** - manually select a target version in a skill configuration
 
 # Before you get started
 
@@ -25,50 +18,64 @@ Connect and configure these integrations:
 1. **GitHub**
 2. **Slack** (optional)
 
-This skill creates watches Pushes to git, and creates Pull Requests.  Accordingly, users will need to configure 
-the GitHub integration before the skill can be enabled.  
+The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected. We recommend connecting the **Slack** integration.
 
-We've also added some optional Slack Commands to this skill.  With Slack enabled, a user can ask the Slack bot
-whether a Repository is out of sync with any npm version targets.
+When the optional Slack integration is enabled, users can interact with this skill directly from Slack.
 
 # How to configure
 
-Each configuration of this skill will represent a target policy for a set of npm dependencies.  For example, if an 
- 
-artifact should have version `1.0.7`, and a second artifact should have version `0.3.8`, 
-then you can select a `Manual` target with the values:
+You can enable this skill without configuring any target versions.  In this mode, the skill will collect
+data about your artifact versions, but will take no action.  Simply select the set of
+repositories that should be scanned.    
 
-```
-["groupA:artifactA:1.0.7", "groupB:artifactB:0.3.8"]
-```
-
-
-Instead of having to update a manual configuration, choosing `latest available` or `latest used` requires only that
-you specify the names of libraries that should conform to this policy.  For this, we also use an `application/json` encoded 
-string array but versions are not included: `["groupA:artfactA", "groupB:artifactB"]`.
-
-
-
-As with many Atomist skills, this skill has a `RepoFilter`.  So you can start by applying the skill to a few projects 
-and then let it evolve towards a best practice that you share.  This skill is particularly well suited to being applied to
-"all" repositories.
-
-## How to use this skill
-
-You can enable this skill _without_ configuring any policy.  In this mode, the skill will track all versions of 
-npm libaries used but will not raise any Pull Requests.  It's in "recording" mode but won't create any
-Pull Requests.  This mode is still useful:
-
-1.  Atomist provides a graphql API to query for all projects using a library, or a
-    particular version of that library.  We call these "drift" queries.
-2.  If you have Slack enabled, typing `@atomist mvn fingerprints --slug=org/repo`, will 
-    show all versions used by a particular repo.  Typing 
-    `@atomist mvn update --slug=org/repo --dependency=groupA:artifactA:1.0.8` will raise
-    Pull request, whether there is a current policy set or not.
+1. **Select dependency target policy, optional policy configuration** 
     
-This skill is _most_ useful when you configure one of the policies.  You might already see
-version drift across your node projects; however, even if that's not the case, an "actionable" signal
-like a Pull Request, is a nice productivity boost for even a small set of projects.  
+    A `Manual` policy requires that you specify both the library and the version.
+
+    ![screenshot1](docs/images/screenshot1.png)
+
+    The other two policies require only the names of the libraries that should be kept up to date.
+
+    ![screenshot2](docs/images/screenshot2.png)
+
+2. **Determine repository scope**
+
+    ![Repository filter](docs/images/repo-filter.png)
+
+    By default, this skill will be enabled for all repositories in all organizations you have connected.
+
+    To restrict the organizations or specific repositories on which the skill will run, you can explicitly choose 
+    organization(s) and repositories.
+
+## How to use Update Maven Dependencies
+
+1.  **Configure the skill, add a target policy and select repositories to scan for `pom.xml` files** 
+
+    The skill will run on any new pushes to selected repositories.
+    and will raise pull requests for npm libraries that are not on the target.
+    
+    ![screenshot3](docs/images/screenshot3.png)
+   
+
+2.  **Run a version sync from Slack**
+
+    Interactively check that a repository is in sync with current policies. 
+
+    ```
+    @atomist mvn sync
+    @atomist mvn sync --slug=org/repo
+    ```
+
+    (you do not need to specify a `--slug` parameter if your Slack channel is linked to a repository)
+
+    ![screenshot4](docs/images/screenshot4.png)
+    
+    
+    This is useful when you want to raise a pull request without having to wait for a push to occur.
+
+3.  ** Enjoy an easier way to keep your dependencies as current as you want them to be**
+
+To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/update-maven-dependencies-skill/issues). See the [code](https://github.com/atomist-skills/update-maven-dependencies-skill) for the skill.
 
 <!---atomist-skill-readme:end--->
 

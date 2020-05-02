@@ -4,9 +4,7 @@
             [goog.string :as gstring]
             [goog.string.format]
             [atomist.cljs-log :as log]
-            [atomist.json :as json]
             [atomist.api :as api]
-            [atomist.sha :as sha]
             [atomist.maven :as maven]
             [atomist.deps :as deps]
             [atomist.config :as config]
@@ -40,10 +38,10 @@
    Transform Maven dependencies into Fingerprints
 
    Our data structure has {:keys [group artifact version name version scope]}"
-  [request project]
+  [request]
   (go
     (try
-      (let [deps (<! (maven/find-declared-dependencies project))]
+      (let [deps (<! (maven/find-declared-dependencies (:project request)))]
         (deps->fingerprints deps))
       (catch :default ex
         (log/error "unable to compute maven fingerprints")
@@ -66,14 +64,15 @@
    Transform Maven dependencies into Fingerprints
 
    Our data structure has {:keys [group artifact version name version scope]}"
-  [request project]
+  [request]
   (go
     (try
-      (let [deps (<! (maven/find-declared-dependencies project))
+      (let [deps (<! (maven/find-declared-dependencies (:project request)))
             fingerprints (deps->fingerprints deps)]
         (log/infof "found %d fingerprints" (count fingerprints))
         (<! (apply-policy
-             (assoc request :project project :fingerprints fingerprints)))
+             (assoc request
+               :fingerprints fingerprints)))
         fingerprints)
       (catch :default ex
         (log/error "unable to compute maven fingerprints")
@@ -88,10 +87,11 @@
       data - Incoming Request #js object
       sendreponse - callback ([obj]) puts an outgoing message on the response topic"
   [data sendreponse]
-  (deps/deps-handler data sendreponse
-                     ["ShowMavenDependencies" just-fingerprints]
+  (deps/deps-handler data
+                     sendreponse
+                     ["ShowMavenDependencies"]
                      ["SyncMavenDependency"]
-                     ["UpdateMavenDependency" compute-fingerprints
+                     ["UpdateMavenDependency"
                       (api/compose-middleware
                        [config/set-up-target-configuration]
                        [config/validate-dependency]
@@ -100,4 +100,6 @@
                                                        :pattern ".*"
                                                        :validInput "groupId:artifactId:version"}]
                        [api/extract-cli-parameters [[nil "--dependency dependency" "group:artifact:version"]]])]
+                     just-fingerprints
+                     compute-fingerprints
                      config/validate-maven-policy))
