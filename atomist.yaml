@@ -53,10 +53,10 @@ parameters:
       required: true
       options:
         - description: Use the latest semver version
-          text: latest semver used
+          text: Latest semver used
           value: latestSemVerUsed
         - description: Use the set of maven dependencies configured manually in this Skill
-          text: manual
+          text: Manual
           value: manualConfiguration
   - string:
       description: >
