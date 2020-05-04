@@ -8,7 +8,7 @@
     "build": "shadow-cljs release release"
   },
   "dependencies": {
-    "@atomist/skill-logging": "0.1.0-master.20200306143401",
+    "@atomist/skill-logging": "0.1.0-master.20200316180914",
     "@atomist/automation-client": "^1.7.0",
     "@atomist/sdm": "^1.8.0-dynamic-goals.20191115162021",
     "@google-cloud/pubsub": "^1.0.0",
