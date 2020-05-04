@@ -59,7 +59,7 @@ parameters:
           text: Manual
           value: manualConfiguration
   - string:
-      description: >
+      description: |
         These policies require an application/json encoded array of Strings
       displayName: Policy Configuration
       name: dependencies
