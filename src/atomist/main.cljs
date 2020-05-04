@@ -103,3 +103,36 @@
                      just-fingerprints
                      compute-fingerprints
                      config/validate-maven-policy))
+
+(comment
+ (enable-console-print!)
+ (atomist.main/handler #js {:command "ShowMavenDependencies"
+                            :source {:slack {:channel {:id "CDRDCAE2G"}
+                                             :user {:id "U2ATJPCSK"}
+                                             :team {:id "T29E48P34"}}}
+                            :correlation_id "corrid"
+                            :api_version "1"
+                            :team {:id "T29E48P34"}
+                            :configurations [{:name "test"
+                                              :enabled true
+                                              :parameters [{:name "policy" :value "manualConfiguration"}
+                                                           {:name "dependencies" :value "[\"io.spring.javaformat:spring-javaformat-maven-plugin:0.0.7\"]"}]}]
+                            :raw_message "mvn fingerprints"
+                            :secrets [{:uri "atomist://api-key" :value (.. js/process -env -API_KEY_SLIMSLENDERSLACKS_PROD_GITHUB_AUTH)}]}
+                       (fn [& args]
+                         (go (cljs.pprint/pprint (first args)))))
+ (atomist.main/handler #js {:command "SyncMavenDependency"
+                            :source {:slack {:channel {:id "CDRDCAE2G"}
+                                             :user {:id "U2ATJPCSK"}
+                                             :team {:id "T29E48P34"}}}
+                            :correlation_id "corrid"
+                            :api_version "1"
+                            :team {:id "T29E48P34"}
+                            :configurations [{:name "test"
+                                              :enabled true
+                                              :parameters [{:name "policy" :value "manualConfiguration"}
+                                                           {:name "dependencies" :value "[\"io.spring.javaformat:spring-javaformat-maven-plugin:0.0.7\"]"}]}]
+                            :raw_message "mvn sync"
+                            :secrets [{:uri "atomist://api-key" :value (.. js/process -env -API_KEY_SLIMSLENDERSLACKS_PROD_GITHUB_AUTH)}]}
+                       (fn [& args]
+                         (go (cljs.pprint/pprint (first args))))))

@@ -136,11 +136,10 @@
     project))
 
 (defn apply-library-editor
-  [project library-name library-version]
+  [project target-fingerprint]
   (go
     (try
-      (let [[_ group artifact] (re-find #"(.*):(.*)" library-name)]
-        (<! (apply-maven-dependency project [{:data (json/->str {:group group :artifact artifact :version library-version})}])))
+      (<! (apply-maven-dependency project [{:data (json/->str (:data target-fingerprint))}]))
       :success
       (catch :default ex
         (log/error "failure updating pom.xml" ex)

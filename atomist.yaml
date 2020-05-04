@@ -60,11 +60,7 @@ parameters:
           value: manualConfiguration
   - string:
       description: >
-        The `Manual` policy requires an application/json formatted map of
-        dependencies.
-
-        The two `Latest` policies require an application/json formatted array of
-        Strings, which must refer to npm dependencies.
+        These policies require an application/json encoded array of Strings
       displayName: Policy Configuration
       name: dependencies
       lineStyle: multiple

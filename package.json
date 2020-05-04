@@ -4,19 +4,20 @@
   "author": "jim@atomist.com",
   "description": "use this to pull in a skill's npm dependencies",
   "scripts": {
-    "build:watch": "shadow-cljs watch script",
+    "build:watch": "shadow-cljs watch dev",
     "build": "shadow-cljs release release"
   },
   "dependencies": {
-    "@atomist/skill-logging": "0.1.0-master.20200306143401",
     "@atomist/automation-client": "^1.7.0",
     "@atomist/sdm": "^1.8.0-dynamic-goals.20191115162021",
-    "@google-cloud/pubsub": "^1.0.0",
-    "request": "^2.88.0",
-    "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
     "@atomist/sdm-core": "^1.7.0",
+    "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
+    "@atomist/skill-logging": "0.1.0-master.20200306143401",
+    "@google-cloud/pubsub": "^1.0.0",
     "@google-cloud/storage": "^4.1.3",
-    "iconv-lite": "^0.4.19"
+    "iconv-lite": "^0.4.19",
+    "request": "^2.88.0",
+    "shell-quote": "^1.7.2"
   },
   "devDependencies": {
     "shadow-cljs": "^2.8.69",
