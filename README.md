@@ -52,10 +52,7 @@ repositories that should be scanned.
 1.  **Configure the skill, add a target policy and select repositories to scan for `pom.xml` files** 
 
     The skill will run on any new pushes to selected repositories.
-    and will raise pull requests for npm libraries that are not on the target.
-    
-    ![screenshot3](docs/images/screenshot3.png)
-   
+    and will raise pull requests for artifacts that are not on target.   
 
 2.  **Run a version sync from Slack**
 
