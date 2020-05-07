@@ -7,9 +7,10 @@
             [atomist.local-runner :refer [call-event-handler fake-push fake-command-handler]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(enable-console-print!)
-
 (comment
+
+  (enable-console-print!)
+
   (-> (fake-push "T095SFFBK" "atomisthq" "spring-types" "master")
       (assoc :configurations [{:parameters [{:name "policy" :value "manualConfiguration"}
                                             {:name "dependencies" :value "[\"groupId:artifactId:version\"]"}]}])
