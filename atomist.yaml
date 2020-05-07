@@ -5,9 +5,9 @@ skill:
     - DEV_EX
   package:
     use: atomist/package-cljs-skill
-  repository: 'https://github.com/atomist-skills/update-maven-dependencies'
+  repository: 'https://github.com/atomist-skills/update-maven-dependencies-skill'
   license: Apache-2.0
-  homepage: 'https://github.com/atomist-skills/update-maven-dependencies'
+  homepage: 'https://github.com/atomist-skills/update-maven-dependencies-skill'
   name: atomist/update-maven-dependencies
   long_description: |
     Track all versions of maven pom.xml dependencies and allow users to set
