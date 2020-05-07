@@ -4,53 +4,27 @@
             [atomist.sdmprojectmodel :as sdm]
             [atomist.cljs-log :as log]
             [cljs.core.async :refer [<! >! timeout chan]]
-            [atomist.sha :as sha])
+            [atomist.local-runner :refer [call-event-handler fake-push fake-command-handler]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
-(sdm/enable-sdm-debug-logging)
-
-(def token (.. js/process -env -API_KEY_SLIMSLENDERSLACKS_PROD))
-(def github-token (.. js/process -env -GITHUB_TOKEN))
 
 (comment
-  (.catch
-   (.then
-    (atomist.main/handler
-     #js {:data {:Push [{:branch "master"
-                         :repo {:name "spring-types"
-                                :org {:owner "atomisthq"
-                                      :scmProvider {:providerId "zjlmxjzwhurspem"
-                                                    :credential {:secret github-token}}}}
-                         :after {:message ""}}]}
-          :configurations [{:parameters [{:name "policy" :value "manualConfiguration"}
-                                         {:name "dependencies" :value "[\"groupId:artifactId:version\"]"}]}]
-          :secrets [{:uri "atomist://api-key" :value token}]
-          :extensions {:team_id "T095SFFBK"}}
-     (fn [& args] (log/info "Response:  " args)))
-    (fn [v] "value " (println v)))
-   (fn [error] "error " (println error))))
+ (-> (fake-push "T095SFFBK" "atomisthq" "spring-types" "master")
+     (assoc :configurations [{:parameters [{:name "policy" :value "manualConfiguration"}
+                                           {:name "dependencies" :value "[\"groupId:artifactId:version\"]"}]}])
+     (call-event-handler atomist.main/handler))
 
-(comment
- ;; switch a dependency to be managed
-  (sdm/do-with-shallow-cloned-project
-   (fn [project]
-     (go
-       (log/info "apply-maven-dependency " (<! (apply-maven-dependency project "com.atomist" "artifact-source" "managed")))
-       (log/info (<! (sdm/get-content (<! (promise/from-promise (.getFile ^js project "./pom.xml"))))))
-       (log/info (<! (find-declared-dependencies project)))
-       :true))
-   github-token
-   {:repo "spring-types"
-    :owner "atomisthq"
-    :branch "master"})
- ;; SAMPLE:  compute-maven fingerprint array for the root pom.xml file in a repo
-  (sdm/do-with-shallow-cloned-project
-   (fn [project]
-     (go
-       (cljs.pprint/pprint (<! (atomist.main/just-fingerprints {} project)))
-       :true))
-   github-token
-   {:repo "spring-types"
-    :owner "atomisthq"
-    :branch "master"}))
+ (-> (fake-command-handler "T29E48P34" "ShowMavenDependencies" "mvn fingerprints" "CDRDCAE2G" "U2ATJPCSK")
+     (assoc :configurations [{:name "test"
+                              :enabled true
+                              :parameters [{:name "policy" :value "manualConfiguration"}
+                                           {:name "dependencies" :value "[\"io.spring.javaformat:spring-javaformat-maven-plugin:0.0.7\"]"}]}])
+     (call-event-handler atomist.main/handler))
+
+ (-> (fake-command-handler "T29E48P34" "SyncMavenDependency" "mvn fingerprints" "CDRDCAE2G" "U2ATJPCSK")
+     (assoc :configurations [{:name "test"
+                              :enabled true
+                              :parameters [{:name "policy" :value "manualConfiguration"}
+                                           {:name "dependencies" :value "[\"io.spring.javaformat:spring-javaformat-maven-plugin:0.0.7\"]"}]}])
+     (call-event-handler atomist.main/handler)))

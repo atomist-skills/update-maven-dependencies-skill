@@ -22,7 +22,7 @@ skill:
     entry_point: eventhandler
     memory: 512
     timeout: 60
-resource_providers:
+resourceProviders:
   - name: github
     description: GitHub
     typeName: GitHubAppResourceProvider
