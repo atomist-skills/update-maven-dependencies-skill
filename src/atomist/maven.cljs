@@ -3,7 +3,6 @@
             [atomist.promise :as promise]
             [atomist.api :as api]
             [cljs.core.async :refer [<! >! timeout chan]]
-            [atomist.sdmprojectmodel :as sdm]
             [clojure.string :as s]
             [goog.string :as gstring]
             [goog.string.format]

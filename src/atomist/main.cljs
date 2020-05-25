@@ -3,7 +3,6 @@
             [cljs.core.async :refer [<! >! timeout chan]]
             [goog.string :as gstring]
             [goog.string.format]
-            [atomist.cljs-log :as log]
             [atomist.api :as api]
             [atomist.maven :as maven]
             [atomist.deps :as deps]
