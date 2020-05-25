@@ -30,55 +30,8 @@
           :displayType "MVN Coordinate"})
        (into [])))
 
-(defn just-fingerprints
-  "TODO - we used to support multiple pom.xml files in the Project.  The
-          path field was added to the Fingerprint to manage this.
-          This version supports only a pom.xml in the root of the Repo.
-
-   Transform Maven dependencies into Fingerprints
-
-   Our data structure has {:keys [group artifact version name version scope]}"
-  [request]
-  (go
-    (try
-      (let [deps (<! (maven/find-declared-dependencies (:project request)))]
-        (deps->fingerprints deps))
-      (catch :default ex
-        (log/error "unable to compute maven fingerprints")
-        (log/error ex)
-        {:error ex
-         :message "unable to compute maven fingerprints"}))))
-
-(def apply-policy (partial deps/apply-policy-targets {:type "maven-direct-dep"
-                                                      :apply-library-editor maven/apply-library-editor
-                                                      :->library-version maven/data->library-version
-                                                      :->data maven/library-version->data
-                                                      :->sha maven/data->sha
-                                                      :->name maven/library-name->name}))
-
-(defn compute-fingerprints
-  "TODO - we used to support multiple pom.xml files in the Project.  The
-          path field was added to the Fingerprint to manage this.
-          This version supports only a pom.xml in the root of the Repo.
-
-   Transform Maven dependencies into Fingerprints
-
-   Our data structure has {:keys [group artifact version name version scope]}"
-  [request]
-  (go
-    (try
-      (let [deps (<! (maven/find-declared-dependencies (:project request)))
-            fingerprints (deps->fingerprints deps)]
-        (log/infof "found %d fingerprints" (count fingerprints))
-        (<! (apply-policy
-             (assoc request
-                    :fingerprints fingerprints)))
-        fingerprints)
-      (catch :default ex
-        (log/error "unable to compute maven fingerprints")
-        (log/error ex)
-        {:error ex
-         :message "unable to compute maven fingerprints"}))))
+(defn extract [request]
+  (go (deps->fingerprints (<! (maven/find-declared-dependencies (:project request))))))
 
 (defn ^:export handler
   "handler
@@ -87,19 +40,25 @@
       data - Incoming Request #js object
       sendreponse - callback ([obj]) puts an outgoing message on the response topic"
   [data sendreponse]
-  (deps/deps-handler data
-                     sendreponse
-                     ["ShowMavenDependencies"]
-                     ["SyncMavenDependency"]
-                     ["UpdateMavenDependency"
-                      (api/compose-middleware
-                       [config/set-up-target-configuration]
-                       [config/validate-dependency]
-                       [api/check-required-parameters {:name "dependency"
-                                                       :required true
-                                                       :pattern ".*"
-                                                       :validInput "groupId:artifactId:version"}]
-                       [api/extract-cli-parameters [[nil "--dependency dependency" "group:artifact:version"]]])]
-                     just-fingerprints
-                     compute-fingerprints
-                     config/validate-maven-policy))
+  (deps/deps-handler
+   data
+   sendreponse
+   :deps-command/show "ShowMavenDependencies"
+   :deps-command/sync "SyncMavenDependency"
+   :deps-command/update "UpdateMavenDependency"
+   :deps/type "maven-direct-dep"
+   :deps/apply-library-editor maven/apply-library-editor
+   :deps/extract extract
+   :deps/->library-version maven/data->library-version
+   :deps/->data maven/library-version->data
+   :deps/->sha maven/data->sha
+   :deps/->name maven/library-name->name
+   :deps/validate-policy config/validate-maven-policy
+   :deps/validate-command-parameters (api/compose-middleware
+                                      [config/set-up-target-configuration]
+                                      [config/validate-dependency]
+                                      [api/check-required-parameters {:name "dependency"
+                                                                      :required true
+                                                                      :pattern ".*"
+                                                                      :validInput "groupId:artifactId:version"}]
+                                      [api/extract-cli-parameters [[nil "--dependency dependency" "group:artifact:version"]]])))
