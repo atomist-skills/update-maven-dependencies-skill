@@ -8,6 +8,7 @@
     "build": "shadow-cljs release release"
   },
   "dependencies": {
+    "js-yaml": "^3.13.1",
     "@atomist/skill-logging": "0.1.0-master.20200316180914",
     "shell-quote": "^1.7.2",
     "@atomist/automation-client": "^1.7.0",
@@ -16,6 +17,8 @@
     "request": "^2.88.0",
     "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
     "@atomist/sdm-core": "^1.7.0",
+    "fast-glob": "^3.2.2",
+    "tmp": "^0.2.1",
     "@google-cloud/storage": "^4.1.3",
     "iconv-lite": "^0.4.19"
   },
