@@ -1,7 +1,7 @@
 {:skill
  {:description
   "Track versions and keep your Maven dependencies up to date",
-  :category ["DEPENDENCIES" "DEV_EX"],
+  :category ["DEPENDENCIES" "SECURITY"],
   :package {:use "atomist/package-cljs-skill"},
   :repository
   "https://github.com/atomist-skills/update-maven-dependencies-skill",
