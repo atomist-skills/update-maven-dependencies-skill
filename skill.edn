@@ -1,6 +1,6 @@
 {:description
- "Automatically update dependencies based on your own policy",
- :category ["DEPENDENCIES" "DEV_EX"],
+ "Track versions and keep your Maven dependencies up to date",
+ :category ["DEPENDENCIES" "SECURITY"],
  :package {:use "atomist/package-cljs-skill"},
  :repository
  "https://github.com/atomist-skills/update-maven-dependencies-skill",
