@@ -1,7 +1,6 @@
 {:description
  "Track versions and keep your Maven dependencies up to date",
  :category ["DEPENDENCIES" "SECURITY"],
- :package {:use "atomist/package-cljs-skill"},
  :repository
  "https://github.com/atomist-skills/update-maven-dependencies-skill",
  :license "Apache-2.0",
@@ -19,7 +18,7 @@
  :homepage
  "https://github.com/atomist-skills/update-maven-dependencies-skill",
  :displayName "update maven dependencies skill",
- :name "atomist/update-maven-dependencies",
+ :name "update-maven-dependencies",
  :long_description
  "Track all versions of maven pom.xml dependencies and allow users to set\ncross repo targets for dependency versions.\n",
  :icon
