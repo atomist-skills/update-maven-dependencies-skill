@@ -21,11 +21,11 @@ This page details all runtime dependencies of `update-maven-dependencies`.
 | [Custom: https://github.com/medikoo/clock](#custom-httpsgithubcommedikooclock)                                       | 1     |
 | [GPL-2.0](#gpl-20)                                                                                                   | 2     |
 | [GPL-3.0](#gpl-30)                                                                                                   | 4     |
-| [ISC](#isc)                                                                                                          | 38    |
+| [ISC](#isc)                                                                                                          | 39    |
 | [MIT AND BSD-3-Clause](#mit-and-bsd-3-clause)                                                                        | 1     |
-| [MIT](#mit)                                                                                                          | 786   |
+| [MIT](#mit)                                                                                                          | 787   |
 | [PSF](#psf)                                                                                                          | 2     |
-| [UNKNOWN](#unknown)                                                                                                  | 1     |
+| [UNKNOWN](#unknown)                                                                                                  | 2     |
 | [Unlicense](#unlicense)                                                                                              | 1     |
 | [WTFPL](#wtfpl)                                                                                                      | 1     |
 
@@ -248,6 +248,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `semver`               | `5.7.1`  |                      | [https://github.com/npm/node-semver](https://github.com/npm/node-semver)                       |
 | `semver`               | `6.3.0`  |                      | [https://github.com/npm/node-semver](https://github.com/npm/node-semver)                       |
 | `semver`               | `7.1.1`  |                      | [https://github.com/npm/node-semver](https://github.com/npm/node-semver)                       |
+| `semver`               | `7.3.2`  |                      | [https://github.com/npm/node-semver](https://github.com/npm/node-semver)                       |
 | `setprototypeof`       | `1.1.1`  | Wes Todd             | [https://github.com/wesleytodd/setprototypeof](https://github.com/wesleytodd/setprototypeof)   |
 | `signal-exit`          | `3.0.2`  | Ben Coe              | [https://github.com/tapjs/signal-exit](https://github.com/tapjs/signal-exit)                   |
 | `stringify-tree`       | `1.0.2`  | Jessica Kerr         | [https://github.com/jessitron/stringify-tree](https://github.com/jessitron/stringify-tree)     |
@@ -727,6 +728,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `java-properties`                                  | `1.0.2`    |                                                       | [https://github.com/mattdsteele/java-properties](https://github.com/mattdsteele/java-properties)                                                                                       |
 | `js-tokens`                                        | `4.0.0`    | Simon Lydell                                          | [https://github.com/lydell/js-tokens](https://github.com/lydell/js-tokens)                                                                                                             |
 | `js-yaml`                                          | `3.13.1`   | Vladimir Zapparov                                     | [https://github.com/nodeca/js-yaml](https://github.com/nodeca/js-yaml)                                                                                                                 |
+| `js-yaml`                                          | `3.14.0`   | Vladimir Zapparov                                     | [https://github.com/nodeca/js-yaml](https://github.com/nodeca/js-yaml)                                                                                                                 |
 | `jsbn`                                             | `0.1.1`    | Tom Wu                                                | [https://github.com/andyperlitch/jsbn](https://github.com/andyperlitch/jsbn)                                                                                                           |
 | `jsesc`                                            | `2.5.2`    | Mathias Bynens                                        | [https://github.com/mathiasbynens/jsesc](https://github.com/mathiasbynens/jsesc)                                                                                                       |
 | `json-bigint`                                      | `0.3.0`    | Andrey Sidorov                                        | [https://github.com/sidorares/json-bigint](https://github.com/sidorares/json-bigint)                                                                                                   |
@@ -1067,9 +1069,10 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 
 #### UNKNOWN
 
-| Name       | Version | Publisher        | Repository                                                                           |
-| ---------- | ------- | ---------------- | ------------------------------------------------------------------------------------ |
-| `dreamopt` | `0.6.0` | Andrey Tarantsov | [https://github.com/andreyvit/dreamopt.js](https://github.com/andreyvit/dreamopt.js) |
+| Name                | Version  | Publisher        | Repository                                                                           |
+| ------------------- | -------- | ---------------- | ------------------------------------------------------------------------------------ |
+| `@atomist/api-cljs` | `0.4.54` | jim@atomist.com  |                                                                                      |
+| `dreamopt`          | `0.6.0`  | Andrey Tarantsov | [https://github.com/andreyvit/dreamopt.js](https://github.com/andreyvit/dreamopt.js) |
 
 #### Unlicense
 
