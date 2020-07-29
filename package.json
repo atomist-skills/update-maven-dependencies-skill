@@ -5,7 +5,8 @@
   "description": "use this to pull in a skill's npm dependencies",
   "scripts": {
     "build:watch": "shadow-cljs watch dev",
-    "build": "shadow-cljs release release"
+    "build": "shadow-cljs release release",
+    "atm:lint:prettier": "prettier --write"
   },
   "dependencies": {
     "js-yaml": "^3.13.1",
@@ -23,8 +24,19 @@
     "iconv-lite": "^0.4.19"
   },
   "devDependencies": {
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
     "shadow-cljs": "^2.8.69",
     "source-map-support": "0.5.9",
     "ws": "^7.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.@(graphql|json|markdown|yaml|yml|md)": "npm run atm:lint:prettier"
   }
 }
