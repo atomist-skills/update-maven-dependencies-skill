@@ -1,6 +1,6 @@
 {:description
  "Track versions and keep your Maven dependencies up to date",
- :category ["DEPENDENCIES" "SECURITY"],
+ :categories ["DEPENDENCIES" "SECURITY"],
  :repository
  "https://github.com/atomist-skills/update-maven-dependencies-skill",
  :license "Apache-2.0",
