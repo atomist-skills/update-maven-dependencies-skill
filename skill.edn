@@ -17,7 +17,7 @@
    :maxAllowed 1}],
  :homepage
  "https://github.com/atomist-skills/update-maven-dependencies-skill",
- :displayName "update maven dependencies skill",
+ :displayName "Update Maven Dependencies",
  :name "update-maven-dependencies",
  :long_description
  "Track all versions of maven pom.xml dependencies and allow users to set\ncross repo targets for dependency versions.\n",
@@ -37,7 +37,7 @@
    :description "sync dependencies for one Repository",
    :pattern "^mvn sync.*$"}],
  :iconUrl
- "https://raw.githubusercontent.com/cljs/logo/master/cljs.png",
+ "https://d1q6f0aelx0por.cloudfront.net/product-logos/b14d466e-356f-4b00-bc4e-af5e8284a1bd-maven.png",
  :runtime
  {:name "nodejs10",
   :entry_point "eventhandler",
