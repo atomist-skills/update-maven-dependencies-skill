@@ -1,6 +1,5 @@
 {:description
  "Track versions and keep your Maven dependencies up to date",
- :categories ["DEPENDENCIES" "SECURITY"],
  :repository
  "https://github.com/atomist-skills/update-maven-dependencies-skill",
  :license "Apache-2.0",
@@ -36,6 +35,7 @@
   {:name "SyncMavenDependency",
    :description "sync dependencies for one Repository",
    :pattern "^mvn sync.*$"}],
+ :categories ["DEPENDENCIES" "SECURITY"],
  :iconUrl
  "https://d1q6f0aelx0por.cloudfront.net/product-logos/b14d466e-356f-4b00-bc4e-af5e8284a1bd-maven.png",
  :runtime
