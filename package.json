@@ -11,7 +11,7 @@
     "atm:lint:prettier": "prettier --write"
   },
   "dependencies": {
-    "@atomist/api-cljs": "^0.4.54",
+    "@atomist/api-cljs": "^0.4.116",
     "@atomist/automation-client": "^1.7.0",
     "@atomist/sdm": "^1.8.0-dynamic-goals.20191115162021",
     "@atomist/sdm-core": "^1.7.0",
