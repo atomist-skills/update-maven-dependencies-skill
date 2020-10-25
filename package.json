@@ -16,7 +16,6 @@
     "@atomist/sdm": "^1.8.0-dynamic-goals.20191115162021",
     "@atomist/sdm-core": "^1.7.0",
     "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
-    "@atomist/skill": "^0.4.0",
     "@atomist/skill-logging": "^0.2.6",
     "@google-cloud/pubsub": "^2.5.0",
     "@google-cloud/storage": "^5.3.0",
