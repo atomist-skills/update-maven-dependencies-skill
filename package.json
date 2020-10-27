@@ -1,31 +1,4 @@
 {
-  "name": "update-maven-dependencies",
-  "version": "0.1.0",
-  "author": "jim@atomist.com",
-  "description": "use this to pull in a skill's npm dependencies",
-  "scripts": {
-    "build:watch": "shadow-cljs watch dev",
-    "build": "shadow-cljs release release",
-    "bundle": "bundle",
-    "skill": "npm run build && npm run bundle",
-    "atm:lint:prettier": "prettier --write"
-  },
-  "dependencies": {
-    "@atomist/api-cljs": "^0.4.116",
-    "@atomist/automation-client": "^1.7.0",
-    "@atomist/sdm": "^1.8.0-dynamic-goals.20191115162021",
-    "@atomist/sdm-core": "^1.7.0",
-    "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
-    "@atomist/skill-logging": "^0.2.6",
-    "@google-cloud/pubsub": "^2.5.0",
-    "@google-cloud/storage": "^5.3.0",
-    "fast-glob": "^3.2.2",
-    "iconv-lite": "^0.4.19",
-    "js-yaml": "^3.13.1",
-    "request": "^2.88.0",
-    "shell-quote": "^1.7.2",
-    "tmp": "^0.2.1"
-  },
   "devDependencies": {
     "@atomist/skill-bundler": "^0.1.13",
     "husky": "^4.2.5",
@@ -35,13 +8,40 @@
     "source-map-support": "0.5.9",
     "ws": "^7.3.0"
   },
+  "dependencies": {
+    "js-yaml": "^3.13.1",
+    "@atomist/skill-logging": "^0.2.6",
+    "shell-quote": "^1.7.2",
+    "@atomist/automation-client": "^1.7.0",
+    "@atomist/sdm": "^1.8.0-dynamic-goals.20191115162021",
+    "@google-cloud/pubsub": "^2.5.0",
+    "request": "^2.88.0",
+    "@atomist/sdm-pack-spring": "2.0.2-master.20191003103506",
+    "@atomist/sdm-core": "^1.7.0",
+    "@atomist/api-cljs": "^0.4.116",
+    "fast-glob": "^3.2.2",
+    "tmp": "^0.2.1",
+    "@google-cloud/storage": "^5.3.0",
+    "iconv-lite": "^0.4.19"
+  },
+  "author": "jim@atomist.com",
+  "name": "update-maven-dependencies",
   "main": "node_modules/@atomist/api-cljs/app.js",
+  "lint-staged": {
+    "**/*.@(graphql|json|markdown|yaml|yml|md)": "npm run atm:lint:prettier"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
-  "lint-staged": {
-    "**/*.@(graphql|json|markdown|yaml|yml|md)": "npm run atm:lint:prettier"
+  "version": "0.1.0",
+  "description": "use this to pull in a skill's npm dependencies",
+  "scripts": {
+    "build:watch": "shadow-cljs watch dev -A:dev:test",
+    "build": "shadow-cljs release release -A:dev:build",
+    "bundle": "bundle",
+    "skill": "npm run build && npm run bundle",
+    "atm:lint:prettier": "prettier --write"
   }
 }
