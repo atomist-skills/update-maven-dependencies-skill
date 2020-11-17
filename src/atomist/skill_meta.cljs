@@ -3,6 +3,6 @@
 
 (def module-name "update-maven-dependencies-skill")
 (def path ".")
-(def version "0.3.1")
-(def tag "0.3.1")
-(def generated-at "2020-11-17T07:45:42Z")
+(def version "0.3.2")
+(def tag "0.3.2")
+(def generated-at "2020-11-17T17:13:33Z")
