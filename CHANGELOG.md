@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist-skills/update-maven-dependencies-skill/compare/0.3.1...HEAD)
+## [Unreleased](https://github.com/atomist-skills/update-maven-dependencies-skill/compare/0.3.3...HEAD)
+
+## [0.3.3](https://github.com/atomist-skills/update-maven-dependencies-skill/compare/0.3.1...0.3.3) - 2020-11-19
 
 ## [0.3.1](https://github.com/atomist-skills/update-maven-dependencies-skill/compare/0.3.0...0.3.1) - 2020-11-17
 
