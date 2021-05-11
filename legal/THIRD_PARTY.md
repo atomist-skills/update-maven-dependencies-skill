@@ -10,7 +10,7 @@ This page details all runtime dependencies of `update-maven-dependencies`.
 | -------------------------------------------------------------------------------------------------------------------- | ----- |
 | [0BSD](#0bsd)                                                                                                        | 1     |
 | [AFLv2.1](#aflv21)                                                                                                   | 1     |
-| [Apache-2.0](#apache-20)                                                                                             | 64    |
+| [Apache-2.0](#apache-20)                                                                                             | 65    |
 | [Apache](#apache)                                                                                                    | 1     |
 | [BSD-2-Clause](#bsd-2-clause)                                                                                        | 14    |
 | [BSD-3-Clause](#bsd-3-clause)                                                                                        | 41    |
@@ -27,7 +27,7 @@ This page details all runtime dependencies of `update-maven-dependencies`.
 | [MIT AND BSD-3-Clause](#mit-and-bsd-3-clause)                                                                        | 1     |
 | [MIT AND CC-BY-3.0](#mit-and-cc-by-30)                                                                               | 1     |
 | [MIT AND Zlib](#mit-and-zlib)                                                                                        | 1     |
-| [MIT](#mit)                                                                                                          | 947   |
+| [MIT](#mit)                                                                                                          | 948   |
 | [PSF](#psf)                                                                                                          | 2     |
 | [Public Domain](#public-domain)                                                                                      | 1     |
 | [UNKNOWN](#unknown)                                                                                                  | 3     |
@@ -78,6 +78,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `@google-cloud/storage`               | `5.3.0`                       | Google Inc.           | [https://github.com/googleapis/nodejs-storage](https://github.com/googleapis/nodejs-storage)                                     |
 | `@google-cloud/storage`               | `5.7.4`                       | Google Inc.           | [https://github.com/googleapis/nodejs-storage](https://github.com/googleapis/nodejs-storage)                                     |
 | `@grpc/grpc-js`                       | `1.1.7`                       | Google Inc.           | [https://github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) |
+| `@grpc/grpc-js`                       | `1.1.8`                       | Google Inc.           | [https://github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) |
 | `@grpc/grpc-js`                       | `1.3.0`                       | Google Inc.           | [https://github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) |
 | `@grpc/proto-loader`                  | `0.5.3`                       | Google Inc.           | [https://github.com/grpc/grpc-node](https://github.com/grpc/grpc-node)                                                           |
 | `@grpc/proto-loader`                  | `0.6.0-pre9`                  | Google Inc.           | [https://github.com/grpc/grpc-node](https://github.com/grpc/grpc-node)                                                           |
@@ -486,6 +487,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@types/node`                                      | `12.12.25`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/node`                                      | `12.12.67`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/node`                                      | `12.19.16`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
+| `@types/node`                                      | `12.20.12`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/node`                                      | `13.13.25`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/node`                                      | `13.13.28`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/node`                                      | `14.14.25`       |                                                       | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
