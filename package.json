@@ -9,7 +9,7 @@
     "ws": "^7.4.6"
   },
   "dependencies": {
-    "@atomist/api-cljs": "^0.5.68",
+    "@atomist/api-cljs": "^0.5.69",
     "@atomist/automation-client": "^2.1.0",
     "@atomist/sdm": "^2.1.1",
     "@atomist/sdm-core": "^1.9.1",
