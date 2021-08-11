@@ -22,7 +22,8 @@ This page details all runtime dependencies of `update-maven-dependencies`.
 | [Custom: https://github.com/graphql/graphql-language-service](#custom-httpsgithubcomgraphqlgraphql-language-service) | 2     |
 | [Custom: https://github.com/medikoo/clock](#custom-httpsgithubcommedikooclock)                                       | 1     |
 | [GPL-2.0](#gpl-20)                                                                                                   | 1     |
-| [GPL-3.0](#gpl-30)                                                                                                   | 6     |
+| [GPL-3.0-or-later](#gpl-30-or-later)                                                                                 | 1     |
+| [GPL-3.0](#gpl-30)                                                                                                   | 5     |
 | [ISC](#isc)                                                                                                          | 68    |
 | [MIT AND BSD-3-Clause](#mit-and-bsd-3-clause)                                                                        | 1     |
 | [MIT AND CC-BY-3.0](#mit-and-cc-by-30)                                                                               | 1     |
@@ -261,14 +262,21 @@ GNU General Public License v2.0 only - [https://www.gnu.org/licenses/old-license
 
 GNU General Public License v3.0 only - [https://www.gnu.org/licenses/gpl-3.0-standalone.html](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
 
-| Name                         | Version                       | Publisher        | Repository                                                                                   |
-| ---------------------------- | ----------------------------- | ---------------- | -------------------------------------------------------------------------------------------- |
-| `@atomist/antlr`             | `1.0.2`                       | Atomist          | [https://github.com/atomist/antlr-ts](https://github.com/atomist/antlr-ts)                   |
-| `@atomist/antlr`             | `1.0.3-master.20200709215047` | Atomist          | [https://github.com/atomist/antlr-ts](https://github.com/atomist/antlr-ts)                   |
-| `@atomist/automation-client` | `2.1.0`                       | Atomist          | [https://github.com/atomist/automation-client](https://github.com/atomist/automation-client) |
-| `@atomist/microgrammar`      | `1.2.1`                       | Atomist          | [https://github.com/atomist/microgrammar](https://github.com/atomist/microgrammar)           |
-| `@atomist/tree-path`         | `1.0.3`                       | Atomist          | [https://github.com/atomist/tree-path](https://github.com/atomist/tree-path)                 |
-| `jszip`                      | `3.6.0`                       | Stuart Knightley | [https://github.com/Stuk/jszip](https://github.com/Stuk/jszip)                               |
+| Name                         | Version                       | Publisher | Repository                                                                                   |
+| ---------------------------- | ----------------------------- | --------- | -------------------------------------------------------------------------------------------- |
+| `@atomist/antlr`             | `1.0.2`                       | Atomist   | [https://github.com/atomist/antlr-ts](https://github.com/atomist/antlr-ts)                   |
+| `@atomist/antlr`             | `1.0.3-master.20200709215047` | Atomist   | [https://github.com/atomist/antlr-ts](https://github.com/atomist/antlr-ts)                   |
+| `@atomist/automation-client` | `2.1.0`                       | Atomist   | [https://github.com/atomist/automation-client](https://github.com/atomist/automation-client) |
+| `@atomist/microgrammar`      | `1.2.1`                       | Atomist   | [https://github.com/atomist/microgrammar](https://github.com/atomist/microgrammar)           |
+| `@atomist/tree-path`         | `1.0.3`                       | Atomist   | [https://github.com/atomist/tree-path](https://github.com/atomist/tree-path)                 |
+
+#### GPL-3.0-or-later
+
+GNU General Public License v3.0 or later - [https://www.gnu.org/licenses/gpl-3.0-standalone.html](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
+
+| Name    | Version | Publisher        | Repository                                                     |
+| ------- | ------- | ---------------- | -------------------------------------------------------------- |
+| `jszip` | `3.7.1` | Stuart Knightley | [https://github.com/Stuk/jszip](https://github.com/Stuk/jszip) |
 
 #### ISC
 
@@ -937,7 +945,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `jsonfile`                                         | `6.1.0`          | JP Richardson                                         | [https://github.com/jprichardson/node-jsonfile](https://github.com/jprichardson/node-jsonfile)                                                 |
 | `jsonpath-plus`                                    | `0.19.0`         | Stefan Goessner                                       | [https://github.com/s3u/JSONPath](https://github.com/s3u/JSONPath)                                                                             |
 | `jsprim`                                           | `1.4.1`          |                                                       | [https://github.com/joyent/node-jsprim](https://github.com/joyent/node-jsprim)                                                                 |
-| `jszip`                                            | `3.6.0`          | Stuart Knightley                                      | [https://github.com/Stuk/jszip](https://github.com/Stuk/jszip)                                                                                 |
+| `jszip`                                            | `3.7.1`          | Stuart Knightley                                      | [https://github.com/Stuk/jszip](https://github.com/Stuk/jszip)                                                                                 |
 | `jwa`                                              | `2.0.0`          | Brian J. Brennan                                      | [https://github.com/brianloveswords/node-jwa](https://github.com/brianloveswords/node-jwa)                                                     |
 | `jws`                                              | `4.0.0`          | Brian J Brennan                                       | [https://github.com/brianloveswords/node-jws](https://github.com/brianloveswords/node-jws)                                                     |
 | `keyv`                                             | `4.0.3`          | Luke Childs                                           | [https://github.com/lukechilds/keyv](https://github.com/lukechilds/keyv)                                                                       |
@@ -1077,7 +1085,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `path-is-absolute`                                 | `1.0.1`          | Sindre Sorhus                                         | [https://github.com/sindresorhus/path-is-absolute](https://github.com/sindresorhus/path-is-absolute)                                           |
 | `path-key`                                         | `2.0.1`          | Sindre Sorhus                                         | [https://github.com/sindresorhus/path-key](https://github.com/sindresorhus/path-key)                                                           |
 | `path-key`                                         | `3.1.1`          | Sindre Sorhus                                         | [https://github.com/sindresorhus/path-key](https://github.com/sindresorhus/path-key)                                                           |
-| `path-parse`                                       | `1.0.6`          | Javier Blanco                                         | [https://github.com/jbgutierrez/path-parse](https://github.com/jbgutierrez/path-parse)                                                         |
+| `path-parse`                                       | `1.0.7`          | Javier Blanco                                         | [https://github.com/jbgutierrez/path-parse](https://github.com/jbgutierrez/path-parse)                                                         |
 | `path-to-regexp`                                   | `0.1.7`          |                                                       | [https://github.com/component/path-to-regexp](https://github.com/component/path-to-regexp)                                                     |
 | `path-type`                                        | `4.0.0`          | Sindre Sorhus                                         | [https://github.com/sindresorhus/path-type](https://github.com/sindresorhus/path-type)                                                         |
 | `pause`                                            | `0.0.1`          | TJ Holowaychuk                                        |                                                                                                                                                |
